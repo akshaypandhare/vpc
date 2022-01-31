@@ -61,7 +61,7 @@ resource "aws_subnet" "external" {
   cidr_block        = var.external_subnets[count.index]["cidr"]
   availability_zone = var.external_subnets[count.index]["az"]
 
-  tags = merge({ Name = "${var.environment}-${var.vpc_name}-${var.internal_subnets[count.index]["name"]}-subnet", Environment = var.environment}, var.public_subnet_tags)
+  tags = merge({ Name = "${var.environment}-${var.vpc_name}-${var.external_subnets[count.index]["name"]}-subnet", Environment = var.environment}, var.public_subnet_tags)
 }
 
 /**
