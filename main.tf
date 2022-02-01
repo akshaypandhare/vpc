@@ -58,6 +58,7 @@ resource "aws_subnet" "internal" {
 resource "aws_subnet" "external" {
   count             = length(var.external_subnets) > 0 ? length(var.external_subnets) : 0
   vpc_id            = aws_vpc.main.id
+  map_public_ip_on_launch = true
   cidr_block        = var.external_subnets[count.index]["cidr"]
   availability_zone = var.external_subnets[count.index]["az"]
 
