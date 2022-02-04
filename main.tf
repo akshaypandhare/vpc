@@ -47,12 +47,12 @@ resource "aws_nat_gateway" "main" {
  */
 
 resource "aws_subnet" "internal" {
-  count             = length(var.internal_subnets) > 0 ? length(var.internal_subnets) : 0
+  count             = sum([length(var.eks_internal_subnets), length(var.internal_subnets]) > 0 ? sum([length(var.eks_internal_subnets), length(var.internal_subnets]) : 0
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.internal_subnets[count.index]["cidr"]
-  availability_zone = var.internal_subnets[count.index]["az"]
+  cidr_block        = concat([var.eks_internal_subnets, var.internal_subnets])[count.index]["cidr"]
+  availability_zone = concat([var.eks_internal_subnets, var.internal_subnets])[count.index]["az"]
 
-  tags = merge({ Name = "${var.environment}-${var.vpc_name}-${var.internal_subnets[count.index]["name"]}-subnet", Environment = var.environment}, var.private_subnet_tags)
+  tags = merge({ Name = "${var.environment}-${var.vpc_name}-${var.internal_subnets[count.index]["name"]}-subnet", Environment = var.environment}, var.eks_internal_subnets_tags)
 }
 
 resource "aws_subnet" "external" {
@@ -93,7 +93,7 @@ resource "aws_route_table" "internal" {
 
 resource "aws_route" "internal" {
   # Create this only if using the NAT gateway service, vs. NAT instances.
-  count                  = length(var.internal_subnets) > 0 ? 1 : 0
+  count                  = sum([length(var.eks_internal_subnets), length(var.internal_subnets]) > 0 ? 1 : 0
   route_table_id         = aws_route_table.internal.id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.main[0].id
@@ -103,7 +103,7 @@ resource "aws_route" "internal" {
  * Route associations
  */
 resource "aws_route_table_association" "internal" {
-  count          = length(var.internal_subnets) > 0 ? length(var.internal_subnets) : 0
+  count          = sum([length(var.eks_internal_subnets), length(var.internal_subnets]) > 0 ? sum([length(var.eks_internal_subnets), length(var.internal_subnets]) : 0
   subnet_id      = element(aws_subnet.internal.*.id, count.index)
   route_table_id = aws_route_table.internal.id
   depends_on     = [aws_subnet.internal]
@@ -115,4 +115,3 @@ resource "aws_route_table_association" "external" {
   route_table_id = aws_route_table.external.id
   depends_on     = [aws_subnet.external]
 }
-
