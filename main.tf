@@ -93,7 +93,7 @@ resource "aws_route_table" "internal" {
 
 resource "aws_route" "internal" {
   # Create this only if using the NAT gateway service, vs. NAT instances.
-  count                  = sum([length(var.eks_internal_subnets), length(var.internal_subnets]) > 0 ? 1 : 0
+  count                  = sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) > 0 ? 1 : 0
   route_table_id         = aws_route_table.internal.id
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = aws_nat_gateway.main[0].id
