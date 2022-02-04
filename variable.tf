@@ -20,6 +20,12 @@ variable "internal_subnets" {
   default     = []
 }
 
+variable "eks_internal_subnets" {
+  description = "List of internal subnets"
+  type        = list
+  default     = []
+}
+
 variable "environment" {
   description = "Environment tag, e.g prod"
   default     = "prod"
@@ -48,6 +54,12 @@ variable "public_subnet_tags" {
 }
 
 variable "private_subnet_tags" {
+  description = "set tags on private subnet, specially incase of EKS"
+  default = {}
+  type = map
+}
+
+variable "eks_internal_subnets_tags" {
   description = "set tags on private subnet, specially incase of EKS"
   default = {}
   type = map
