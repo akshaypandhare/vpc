@@ -103,7 +103,7 @@ resource "aws_route" "internal" {
  * Route associations
  */
 resource "aws_route_table_association" "internal" {
-  count          = sum([length(var.eks_internal_subnets), length(var.internal_subnets]) > 0 ? sum([length(var.eks_internal_subnets), length(var.internal_subnets]) : 0
+  count          = sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) > 0 ? sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) : 0
   subnet_id      = element(aws_subnet.internal.*.id, count.index)
   route_table_id = aws_route_table.internal.id
   depends_on     = [aws_subnet.internal]
