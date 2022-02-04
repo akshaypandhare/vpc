@@ -47,7 +47,7 @@ resource "aws_nat_gateway" "main" {
  */
 
 resource "aws_subnet" "internal" {
-  count             = sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) > 0 ? sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) : 0
+  count             = sum([length(var.eks_internal_subnets),length(var.internal_subnets)]) > 0 ? "${sum([length(var.eks_internal_subnets),length(var.internal_subnets)])}" : 0
   vpc_id            = aws_vpc.main.id
   cidr_block        = concat([var.eks_internal_subnets, var.internal_subnets])[count.index]["cidr"]
   availability_zone = concat([var.eks_internal_subnets, var.internal_subnets])[count.index]["az"]
